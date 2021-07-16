@@ -3,8 +3,10 @@ import {
     AfterViewInit, Compiler, Component, ComponentRef, Injector, NgModule, NgModuleRef, OnDestroy,
     ViewChild, ViewContainerRef, ViewEncapsulation
 } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import DOMPurify from 'dompurify';
 
-import { myData } from './data';
+import { data2Test } from './data2';
 
 @Component({
   selector: 'app-test',
@@ -12,7 +14,7 @@ import { myData } from './data';
   encapsulation: ViewEncapsulation.None,
 })
 export class TestComponent implements AfterViewInit {
-  constructor(private compiler: Compiler) {
+  constructor(private compiler: Compiler, private sanitizer: DomSanitizer) {
     this.resetComponent();
   }
 
@@ -32,14 +34,17 @@ export class TestComponent implements AfterViewInit {
       this.container.remove();
       // Must clear cache.
       this.compiler.clearCache();
-
       // Define the component using Component decorator.
+
+      const sanitizedContent = DOMPurify.sanitize(data2Test.html);
+     const html =  this.sanitizer.bypassSecurityTrustHtml(sanitizedContent);
+
       const component = Component({
-        template: `<h1>Hello Hello</h1>${myData.html}`,
-        styles: [myData.style],
+        template: `${html}`,
+        styles: [data2Test.style],
       })(
         class {
-          data = myData.data;
+          data = data2Test.data2;
         }
       );
 

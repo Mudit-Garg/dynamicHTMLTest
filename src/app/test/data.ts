@@ -864,7 +864,7 @@ public static data = {​
       layoutData.paymentTerms
     ];
   }​
-}​
+}​;
 
 public static html = ` <div class="pageContainer" *ngFor="let page of data.pages; let i = index">
 <page>
@@ -1145,6 +1145,7 @@ public static html = ` <div class="pageContainer" *ngFor="let page of data.pages
 </div>
 </ng-template>
 `;
+
 public static style = `.IMG {
   position: relative;
   height: 100%;
