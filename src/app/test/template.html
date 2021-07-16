@@ -1,0 +1,278 @@
+ <div class="pageContainer" *ngFor="let page of data.pages; let i = index">
+    <page>
+      <div class="IMG">
+        <ng-container *ngFor="let template of page.templates">
+          <ng-container [ngSwitch]="template">
+            <ng-container *ngSwitchCase="'header'">
+              <ng-container *ngTemplateOutlet="header"></ng-container>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'owner_vendor_details'">
+              <ng-container *ngTemplateOutlet="owner_vendor_details"></ng-container>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'hr'">
+              <ng-container *ngTemplateOutlet="hr"></ng-container>
+            </ng-container>
+
+            <!--  <ng-container *ngSwitchCase="'re'">
+              <ng-container *ngTemplateOutlet="re"></ng-container>
+            </ng-container> -->
+
+            <ng-container *ngSwitchCase="'itemList'">
+              <ng-container
+                *ngTemplateOutlet="
+                  itemList;
+                  context: { columns: data.items.columns, items: page.items }
+                "
+              ></ng-container>
+            </ng-container>
+            <ng-container *ngIf="i == data.pages.length - 1">
+              <ng-container *ngSwitchCase="'totals'">
+                <ng-container *ngTemplateOutlet="totals"></ng-container>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'enquiries'">
+                <ng-container *ngTemplateOutlet="enquiries"></ng-container>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'additionalComments'">
+                <ng-container
+                  *ngTemplateOutlet="additionalComments"
+                ></ng-container>
+              </ng-container>
+              <ng-container *ngSwitchCase="'notes'">
+                <ng-container *ngTemplateOutlet="notes"></ng-container>
+              </ng-container>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'footerNotes'">
+              <ng-container *ngTemplateOutlet="footerNotes"></ng-container>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'footer'">
+              <ng-container
+                *ngTemplateOutlet="footer; context: { pageNumber: i + 1 }"
+              ></ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </div>
+    </page>
+  </div>
+
+  <ng-template #hr><hr /></ng-template>
+  <ng-template #header>
+    <div class="d-flex flex-row">
+      <div class="col-8 p-0 justify-content-start">
+        <img [src]="data.logoSrc.value" height="50px" />
+      </div>
+      <div class="col-4 p-0 justify-content-end">
+        <div class="d-flex flex-row">
+          <div class="col p-0 justify-content-start">
+            <p class="mb-0 labelDescription">Purchase Order#</p>
+            <p class="mb-0 labelDescription">Vendor Ref#</p>
+            <p class="mb-0 labelDescription">Date</p>
+            <p class="mb-0 labelDescription">Currency</p>
+          </div>
+          <div class="col p-0 justify-content-end text-right">
+            <p class="mb-0 font-weight-bold">{{ data.purchaseOrderNumber.value }}</p>
+            <p class="mb-0 font-weight-bold">{{ data.vendor.vendorRef.value }}</p>
+            <p class="mb-0 font-weight-bold">{{ data.actionDate.value | date }}</p>
+            <p class="mb-0 font-weight-bold">{{ data.currency.name.value }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #owner_vendor_details>
+    <div class="d-flex flex-row">
+    <div class="col p-0 justify-content-start">
+        <p class="mb-1 hyberLink">VENDOR</p>
+        <h6 class="mb-0">{{ data.vendor.legalName.value }}</h6>
+          <!-- <p class="labelDescription mb-3"> {{ data.vendor.name.value }} </p>-->
+
+        <p class="mb-0 labelDescription">
+          {{ data.vendor.address.street.value }}
+        </p>
+        <p class="mb-0 labelDescription">
+          {{ data.vendor.address.state.value? data.vendor.address.state.value+', ':''}}{{ data.vendor.address.postalCode.value }}
+        </p>
+        <p class="mb-0 labelDescription">
+          {{ data.vendor.address.city.value }}
+        </p>
+        <p class="mb-0 labelDescription">{{ data.vendor.address.country.name.value }}</p>
+        <p class="mb-0 labelDescription" *ngIf=" data.vendor.phone.value">
+          Tel:
+          <span class="pl-2">
+            {{ data.vendor.phone.value }}
+          </span>
+        </p>
+        <p class="mb-0 labelDescription" *ngIf="data.vendor.fax.value">
+          Fax:
+          <span class="pl-2">
+            {{ data.vendor.fax.value }}
+          </span>
+        </p>
+      </div>
+
+      <div class="col p-0 justify-content-end">
+        <p class="mb-1 hyberLink">SHIP TO</p>
+        <h6 class="mb-0">{{ data.company.name.value }}</h6>
+
+        <!--  <p class="labelDescription mb-3"> {{ data.owner.name.value }}</p> -->
+
+        <p class="mb-0 labelDescription">
+          {{ data.owner.address.street.value }}
+        </p>
+        <p class="mb-0 labelDescription">
+          {{ data.owner.address.state.value?data.owner.address.state.value+', ':'' }}{{ data.owner.address.postalCode.value }}
+        </p>
+        <p class="mb-0 labelDescription">
+          {{ data.owner.address.city.value }}
+        </p>
+        <p class="mb-0 labelDescription">{{ data.owner.address.country.name.value }}</p>
+
+        <p class="mb-0 labelDescription" *ngIf="data.owner.phone.value">
+          Tel:<span class="pl-2 "> {{ data.owner.phone.value }}</span>
+        </p>
+
+        <p class="mb-0 labelDescription" *ngIf="data.owner.email.value">
+          mail:<span class="pl-2">
+            {{ data.owner.email.value }}
+          </span>
+        </p>
+      </div>
+
+    </div>
+  </ng-template>
+
+
+   <!-- <ng-template #re>
+  <div class="mt-4">
+    <h6 class="mb-0">RE: {{data.vendor.name.value}}</h6>
+        <p class="m-0 mt-1 mb-n2 labelDescription">We hereby place our order for the following:</p>
+  </div>
+  </ng-template> -->
+
+  <ng-template #itemList let-items="items" let-columns="columns">
+    <table class="table table-sm mt-3">
+      <thead>
+        <tr>
+          <th scope="col" class="{{col.class}}" *ngFor="let col of columns">
+            {{ col.label }}
+            <div
+              *ngIf="col.internalColumns"
+              class="d-flex flex-row justify-content-between pr-5"
+            >
+              <span
+                class="labelDescription font-size-12"
+                *ngFor="let internalCol of col.internalColumns"
+              >
+                {{ internalCol.label }}
+              </span>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rowData of items">
+          <td class="{{col.class}}" *ngFor="let col of columns">
+            {{
+              !col.isTotal ? (rowData[col.value]||'-') : rowData[col.value](rowData) | number:'0.2-2':'en-US'
+            }}
+
+            <div
+              *ngIf="col.internalColumns"
+              class="d-flex flex-row justify-content-between pr-5"
+            >
+              <span
+                class="labelDescription font-size-12"
+                *ngFor="let internalCol of col.internalColumns"
+              >
+                {{ rowData[internalCol.value] ||'-'}}
+              </span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-template>
+
+  <ng-template #totals>
+    <div class="d-flex justify-content-between">
+      <div class="col-8 pr-5"></div>
+      <div class="col-4 p-0">
+        <div
+        *ngFor="let rowData of data.items.totalsFunctions"
+        class="d-flex justify-content-between {{rowData.class}}"
+        >
+          <p class="mb-1">{{ rowData.label }}</p>
+          <p class="mb-1 font-weight-bold">
+            {{data.currency.symbol.value}} {{ rowData.value(data) | number:'1.2-2':'en-US' }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #enquiries>
+    <div class="d-flex mt-1">
+      <div class="col-10 p-0">
+        <p class="mb-1 font-weight-bold">
+          Enquiries regarding this order should be directed to:
+        </p>
+        <div class="d-flex hyberLink">
+          <span>{{ data.owner.name.value }}</span>
+          <span class="pl-3">{{ data.owner.phone.value }}</span>
+          <span class="pl-3">{{ data.owner.email.value }}</span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #additionalComments>
+    <div class="d-flex justify-content-between mt-3">
+      <div class="col-10 p-0">
+        <p class="mb-1 font-weight-bold">
+          Additional Comments:
+        </p>
+        <div class="d-flex labelDescription">
+          {{ data.additionalComments.value }}
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #notes>
+    <div class="d-flex justify-content-between mt-3">
+      <div class="col-10 p-0">
+        <p class="mb-1 font-weight-bold">
+          Notes:
+        </p>
+        <div class="d-flex labelDescription">
+          {{ data.notes.value }}
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #footerNotes>
+    <div class="d-flex justify-content-between mt-3">
+      <div class="col-10 p-0 labelDescription">
+        {{ data.footerNotes.value }}
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #footer let-pageNumber="pageNumber">
+    <div class="d-flex flex-row labelDescription footer">
+      <div class="col p-0">
+        Purchase Order # {{ data.purchaseOrderNumber.value }}
+      </div>
+      <div class="col text-right">
+        Page {{ pageNumber }} of {{ data.pages.length }}
+      </div>
+    </div>
+  </ng-template>
